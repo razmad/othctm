@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Tuntutan Elaun Kerja Lebih Masa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            margin-right: 15px;
+            margin-bottom: 8px;
+        }
+        label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        input, select {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 13px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.secondary {
+            background-color: #f44336;
+        }
+        button.secondary:hover {
+            background-color: #d32f2f;
+        }
+        button.tertiary {
+            background-color: #2196F3;
+        }
+        button.tertiary:hover {
+            background-color: #0b7dda;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .result-section {
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .signature-box {
+            width: 45%;
+            border-top: 1px solid #000;
+            padding-top: 8px;
+            font-size: 13px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        /* CSS untuk cetakan */
+        @media print {
+            body {
+                margin: 0;
+                padding: 5mm;
+                font-size: 9pt;
+                line-height: 1.1;
+            }
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+            h1 {
+                font-size: 12pt;
+                margin: 3px 0 8px 0;
+            }
+            h2 {
+                font-size: 10pt;
+                margin: 3px 0;
+            }
+            .form-section, .result-section {
+                padding: 3px;
+                margin-bottom: 5px;
+                border: 1px solid #999 !important;
+            }
+            table {
+                font-size: 8pt;
+                margin-bottom: 5px;
+                page-break-inside: avoid;
+            }
+            th, td {
+                padding: 2px 4px;
+                border: 1px solid #999 !important;
+            }
+            .form-row {
+                margin-bottom: 3px;
+            }
+            .form-group {
+                margin-right: 8px;
+                margin-bottom: 3px;
+            }
+            label {
+                margin-bottom: 1px;
+                font-size: 8pt;
+            }
+            input[type="date"], input[type="time"] {
+                padding: 1px;
+                font-size: 8pt;
+                width: 95%;
+                border: none !important;
+                background: transparent !important;
+            }
+            button, .table-actions button, .action-buttons {
+                display: none !important;
+            }
+            .time-diff, th:nth-child(5), td:nth-child(5), 
+            th:nth-child(7), td:nth-child(7) {
+                display: none;
+            }
+            .signature-section {
+                margin-top: 10px;
+                page-break-inside: avoid;
+            }
+            .signature-box {
+                width: 48%;
+                padding-top: 3px;
+                font-size: 9pt;
+            }
+            .result-section table {
+                margin-top: 3px;
+            }
+            .table-actions {
+                page-break-after: avoid;
+            }
+            input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            * {
+                border-radius: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="calculator">
+        <h1>PENGIRAAN TUNTUTAN ELAUN KERJA LEBIH MASA</h1>
+        
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="claimNo">NO. PER:</label>
+                    <input type="text" id="claimNo">
+                </div>
+                <div class="form-group">
+                    <label for="claimDate">TUNTUTAN:</label>
+                    <input type="date" id="claimDate" value="2025-04-01">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group" style="flex-grow: 1;">
+                    <label for="employeeName">NAMA:</label>
+                    <input type="text" id="employeeName">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="basicSalary">GAJI POKOK (GP) (RM):</label>
+                    <input type="number" id="basicSalary">
+                </div>
+                <div class="form-group">
+                    <label for="itka">ITKA:</label>
+                    <input type="number" id="itka">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Kadar A -->
+        <div class="table-actions">
+            <h2>KADAR A (1.125x)</h2>
+            <button class="add-row" data-table="rateATable">Tambah Rekod</button>
+        </div>
+        <table id="rateATable">
+            <thead>
+                <tr>
+                    <th>BIL</th>
+                    <th>TARIKH</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>JAM BEKERJA</th>
+                    <th>JAM (DECIMAL)</th>
+                    <th>TINDAKAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="date"></td>
+                    <td><input type="time"></td>
+                    <td><input type="time"></td>
+                    <td class="time-diff"></td>
+                    <td class="decimal-hours"></td>
+                    <td><button class="secondary remove-row">Padam</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">TOTAL A</td>
+                    <td id="totalAHours">0.00</td>
+                    <td id="totalADecimal">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- Kadar B -->
+        <div class="table-actions">
+            <h2>KADAR B (1.25x)</h2>
+            <button class="add-row" data-table="rateBTable">Tambah Rekod</button>
+        </div>
+        <table id="rateBTable">
+            <thead>
+                <tr>
+                    <th>BIL</th>
+                    <th>TARIKH</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>JAM BEKERJA</th>
+                    <th>JAM (DECIMAL)</th>
+                    <th>TINDAKAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="date"></td>
+                    <td><input type="time"></td>
+                    <td><input type="time"></td>
+                    <td class="time-diff"></td>
+                    <td class="decimal-hours"></td>
+                    <td><button class="secondary remove-row">Padam</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">TOTAL B</td>
+                    <td id="totalBHours">0.00</td>
+                    <td id="totalBDecimal">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- Kadar C -->
+        <div class="table-actions">
+            <h2>KADAR C (1.5x)</h2>
+            <button class="add-row" data-table="rateCTable">Tambah Rekod</button>
+        </div>
+        <table id="rateCTable">
+            <thead>
+                <tr>
+                    <th>BIL</th>
+                    <th>TARIKH</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>JAM BEKERJA</th>
+                    <th>JAM (DECIMAL)</th>
+                    <th>TINDAKAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="date"></td>
+                    <td><input type="time"></td>
+                    <td><input type="time"></td>
+                    <td class="time-diff"></td>
+                    <td class="decimal-hours"></td>
+                    <td><button class="secondary remove-row">Padam</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">TOTAL C</td>
+                    <td id="totalCHours">0.00</td>
+                    <td id="totalCDecimal">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- Kadar D -->
+        <div class="table-actions">
+            <h2>KADAR D (1.75x)</h2>
+            <button class="add-row" data-table="rateDTable">Tambah Rekod</button>
+        </div>
+        <table id="rateDTable">
+            <thead>
+                <tr>
+                    <th>BIL</th>
+                    <th>TARIKH</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>JAM BEKERJA</th>
+                    <th>JAM (DECIMAL)</th>
+                    <th>TINDAKAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="date"></td>
+                    <td><input type="time"></td>
+                    <td><input type="time"></td>
+                    <td class="time-diff"></td>
+                    <td class="decimal-hours"></td>
+                    <td><button class="secondary remove-row">Padam</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">TOTAL D</td>
+                    <td id="totalDHours">0.00</td>
+                    <td id="totalDDecimal">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- Kadar E -->
+        <div class="table-actions">
+            <h2>KADAR E (2x)</h2>
+            <button class="add-row" data-table="rateETable">Tambah Rekod</button>
+        </div>
+        <table id="rateETable">
+            <thead>
+                <tr>
+                    <th>BIL</th>
+                    <th>TARIKH</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>JAM BEKERJA</th>
+                    <th>JAM (DECIMAL)</th>
+                    <th>TINDAKAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="date"></td>
+                    <td><input type="time"></td>
+                    <td><input type="time"></td>
+                    <td class="time-diff"></td>
+                    <td class="decimal-hours"></td>
+                    <td><button class="secondary remove-row">Padam</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">TOTAL E</td>
+                    <td id="totalEHours">0.00</td>
+                    <td id="totalEDecimal">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- Hasil Pengiraan -->
+        <div class="result-section">
+            <h2>PENGIRAAN ELAUN</h2>
+            <table>
+                <tr>
+                    <th>KADAR</th>
+                    <th>FAKTOR</th>
+                    <th>JAM</th>
+                    <th>JUMLAH (RM)</th>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>1.125</td>
+                    <td id="displayTotalADecimal">0.00</td>
+                    <td id="amountA">0.00</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>1.25</td>
+                    <td id="displayTotalBDecimal">0.00</td>
+                    <td id="amountB">0.00</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>1.5</td>
+                    <td id="displayTotalCDecimal">0.00</td>
+                    <td id="amountC">0.00</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>1.75</td>
+                    <td id="displayTotalDDecimal">0.00</td>
+                    <td id="amountD">0.00</td>
+                </tr>
+                <tr>
+                    <td>E</td>
+                    <td>2</td>
+                    <td id="displayTotalEDecimal">0.00</td>
+                    <td id="amountE">0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="2">TOTAL</td>
+                    <td id="totalHoursAll">0.00</td>
+                    <td id="totalAmountAll">0.00</td>
+                </tr>
+            </table>
+            
+            <div class="form-row" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label>GAJI POKOK (GP):</label>
+                    <span id="displayBasicSalary">0.00</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>JUMLAH (RM):</label>
+                    <span id="finalAmount">0.00</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>KADAR HAD LAYAK</label>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>GP:</label>
+                    <span id="eligibleGP">0.00</span>
+                </div>
+                <div class="form-group">
+                    <label>ITKA:</label>
+                    <span id="eligibleITKA">0.00</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>TOTAL:</label>
+                    <span id="eligibleTotal">0.00</span>
+                </div>
+                <div class="form-group">
+                    <label>1/3:</label>
+                    <span id="eligibleOneThird">0.00</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>2/3:</label>
+                    <span id="eligibleTwoThird">0.00</span>
+                </div>
+                <div class="form-group">
+                    <label>3/3:</label>
+                    <span id="eligibleThreeThird">0.00</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tandatangan -->
+        <div class="signature-section">
+            <div class="signature-box">
+                <p>T/TGN PENYEDIA</p>
+                <p>TARIKH: ___________________</p>
+            </div>
+            <div class="signature-box">
+                <p>T/TGN PENYEMAK / PELULUS</p>
+                <p>TARIKH: ___________________</p>
+            </div>
+        </div>
+        
+        <!-- Tombol Aksi -->
+        <div class="action-buttons">
+            <div>
+                <button id="calculateBtn">KIRA TUNTUTAN</button>
+            </div>
+            <div>
+                <button id="printBtn" class="tertiary">CETAK</button>
+                <button id="downloadPdfBtn" class="tertiary">MUAT TURUN PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize with sample data
+            updateDisplay();
+            
+            // Add event listeners
+            document.getElementById('calculateBtn').addEventListener('click', calculateAll);
+            document.getElementById('printBtn').addEventListener('click', printCalculator);
+            
+            // Add input change listeners to all time fields
+            const timeInputs = document.querySelectorAll('input[type="time"], input[type="date"]');
+            timeInputs.forEach(input => {
+                input.addEventListener('change', calculateAll);
+            });
+            
+            // Add input change listeners to basic info fields
+            const infoInputs = document.querySelectorAll('#claimNo, #claimDate, #employeeName, #basicSalary, #itka');
+            infoInputs.forEach(input => {
+                input.addEventListener('change', updateDisplay);
+            });
+            
+            // Add row buttons
+            const addRowButtons = document.querySelectorAll('.add-row');
+            addRowButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tableId = this.getAttribute('data-table');
+                    addRow(tableId);
+                });
+            });
+            
+            // Remove row buttons (delegated event)
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-row')) {
+                    const row = e.target.closest('tr');
+                    if (row && row.parentNode.tagName === 'TBODY') {
+                        row.remove();
+                        updateRowNumbers(row.closest('table'));
+                        calculateAll();
+                    }
+                }
+            });
+        });
+        
+        function addRow(tableId) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const newRow = document.createElement('tr');
+            
+            // Get the last row number
+            const rows = tbody.querySelectorAll('tr');
+            const lastRowNumber = rows.length > 0 ? 
+                parseInt(rows[rows.length - 1].querySelector('td').textContent) : 0;
+            
+            newRow.innerHTML = `
+                <td>${lastRowNumber + 1}</td>
+                <td><input type="date"></td>
+                <td><input type="time"></td>
+                <td><input type="time"></td>
+                <td class="time-diff"></td>
+                <td class="decimal-hours"></td>
+                <td><button class="secondary remove-row">Padam</button></td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            // Add event listeners to new inputs
+            const inputs = newRow.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('change', calculateAll);
+            });
+        }
+        
+        function updateRowNumbers(table) {
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.querySelector('td').textContent = index + 1;
+            });
+        }
+        
+        function calculateAll() {
+            calculateRate('A');
+            calculateRate('B');
+            calculateRate('C');
+            calculateRate('D');
+            calculateRate('E');
+            calculateFinalAmount();
+            updateDisplay();
+        }
+        
+        function calculateRate(rate) {
+            const table = document.getElementById(`rate${rate}Table`);
+            const rows = table.querySelectorAll('tbody tr');
+            let totalHours = 0;
+            let totalDecimal = 0;
+            
+            rows.forEach(row => {
+                const dateInput = row.querySelector('input[type="date"]');
+                const timeInInput = row.querySelectorAll('input[type="time"]')[0];
+                const timeOutInput = row.querySelectorAll('input[type="time"]')[1];
+                const timeDiffCell = row.querySelector('.time-diff');
+                const decimalCell = row.querySelector('.decimal-hours');
+                
+                // Skip if date is empty
+                if (!dateInput.value) {
+                    timeDiffCell.textContent = '';
+                    decimalCell.textContent = '';
+                    return;
+                }
+                
+                const timeIn = timeInInput.value;
+                const timeOut = timeOutInput.value;
+                
+                if (timeIn && timeOut) {
+                    const diff = calculateTimeDifference(timeIn, timeOut);
+                    const decimal = convertToDecimalHours(diff);
+                    
+                    timeDiffCell.textContent = diff;
+                    decimalCell.textContent = decimal.toFixed(2);
+                    
+                    totalHours += parseFloat(diff.split(':')[0]) + parseFloat(diff.split(':')[1])/60;
+                    totalDecimal += decimal;
+                } else {
+                    timeDiffCell.textContent = '';
+                    decimalCell.textContent = '';
+                }
+            });
+            
+            // Update totals
+            document.getElementById(`total${rate}Hours`).textContent = totalHours.toFixed(2);
+            document.getElementById(`total${rate}Decimal`).textContent = totalDecimal.toFixed(2);
+        }
+        
+        function calculateTimeDifference(start, end) {
+            const startTime = parseTime(start);
+            const endTime = parseTime(end);
+            
+            // Handle overnight (end time is next day)
+            if (endTime < startTime) {
+                endTime.setDate(endTime.getDate() + 1);
+            }
+            
+            const diffMs = endTime - startTime;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            return `${diffHrs.toString().padStart(2, '0')}:${diffMins.toString().padStart(2, '0')}`;
+        }
+        
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes, 0, 0);
+            return date;
+        }
+        
+        function convertToDecimalHours(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours + (minutes / 60);
+        }
+        
+        function calculateFinalAmount() {
+            const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
+            const itka = parseFloat(document.getElementById('itka').value) || 0;
+            
+            // Get totals for each rate
+            const totalADecimal = parseFloat(document.getElementById('totalADecimal').textContent) || 0;
+            const totalBDecimal = parseFloat(document.getElementById('totalBDecimal').textContent) || 0;
+            const totalCDecimal = parseFloat(document.getElementById('totalCDecimal').textContent) || 0;
+            const totalDDecimal = parseFloat(document.getElementById('totalDDecimal').textContent) || 0;
+            const totalEDecimal = parseFloat(document.getElementById('totalEDecimal').textContent) || 0;
+            
+            // Calculate amounts for each rate
+            const amountA = (basicSalary * 12 / 2504) * totalADecimal * 1.125;
+            const amountB = (basicSalary * 12 / 2504) * totalBDecimal * 1.25;
+            const amountC = (basicSalary * 12 / 2504) * totalCDecimal * 1.5;
+            const amountD = (basicSalary * 12 / 2504) * totalDDecimal * 1.75;
+            const amountE = (basicSalary * 12 / 2504) * totalEDecimal * 2;
+            
+            // Calculate totals
+            const totalHours = totalADecimal + totalBDecimal + totalCDecimal + totalDDecimal + totalEDecimal;
+            const totalAmount = amountA + amountB + amountC + amountD + amountE;
+            
+            // Calculate eligible amounts
+            const eligibleTotal = basicSalary + itka;
+            const eligibleOneThird = eligibleTotal / 3;
+            const eligibleTwoThird = eligibleOneThird * 2;
+            const eligibleThreeThird = eligibleOneThird * 3;
+            
+            // Update display elements
+            document.getElementById('displayTotalADecimal').textContent = totalADecimal.toFixed(2);
+            document.getElementById('displayTotalBDecimal').textContent = totalBDecimal.toFixed(2);
+            document.getElementById('displayTotalCDecimal').textContent = totalCDecimal.toFixed(2);
+            document.getElementById('displayTotalDDecimal').textContent = totalDDecimal.toFixed(2);
+            document.getElementById('displayTotalEDecimal').textContent = totalEDecimal.toFixed(2);
+            
+            document.getElementById('amountA').textContent = amountA.toFixed(2);
+            document.getElementById('amountB').textContent = amountB.toFixed(2);
+            document.getElementById('amountC').textContent = amountC.toFixed(2);
+            document.getElementById('amountD').textContent = amountD.toFixed(2);
+            document.getElementById('amountE').textContent = amountE.toFixed(2);
+            
+            document.getElementById('totalHoursAll').textContent = totalHours.toFixed(2);
+            document.getElementById('totalAmountAll').textContent = totalAmount.toFixed(2);
+            
+            document.getElementById('finalAmount').textContent = totalAmount.toFixed(2);
+            
+            document.getElementById('eligibleGP').textContent = basicSalary.toFixed(2);
+            document.getElementById('eligibleITKA').textContent = itka.toFixed(2);
+            document.getElementById('eligibleTotal').textContent = eligibleTotal.toFixed(2);
+            document.getElementById('eligibleOneThird').textContent = eligibleOneThird.toFixed(2);
+            document.getElementById('eligibleTwoThird').textContent = eligibleTwoThird.toFixed(2);
+            document.getElementById('eligibleThreeThird').textContent = eligibleThreeThird.toFixed(2);
+        }
+        
+        function updateDisplay() {
+            // Update basic info display
+            document.getElementById('displayBasicSalary').textContent = 
+                parseFloat(document.getElementById('basicSalary').value || 0).toFixed(2);
+        }
+        
+        function printCalculator() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
